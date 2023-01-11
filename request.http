@@ -1,5 +1,5 @@
-###POST /test (local)
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080/test
+###POST /health (local)
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080/health
 
-###POST /test (heroku)
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://golang-cicd-workflow.herokuapp.com/test
+###POST /health (heroku)
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://golang-cicd-workflow.herokuapp.com/health

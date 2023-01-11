@@ -1,0 +1,1 @@
+web: make && make go_run
