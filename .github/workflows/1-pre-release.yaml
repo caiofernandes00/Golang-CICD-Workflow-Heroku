@@ -1,24 +1,14 @@
-name: Go package
+name: Validate PR
 
-on: [push]
+on:
+  push:
+    branches:
+      - feature**
+      - bugfix**
+      - hotfix**
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: [ '1.16.x', '1.17.x', '1.18.x' ]
-    
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Set up Go
-        uses: actions/setup-go@v3
-        with:
-          go-version: 1.15
-
-      - name: Build
-        run: go build -v ./...
-
-      - name: Test
-        run: go test -v ./...
+  # Reuse test workflow
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yaml

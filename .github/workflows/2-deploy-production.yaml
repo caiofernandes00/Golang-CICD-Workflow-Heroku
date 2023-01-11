@@ -6,6 +6,10 @@ on:
       - main
 
 jobs:
+  test:
+    name: Test
+    uses: ./.github/workflows/test.yaml
+
   deploy:
     runs-on: ubuntu-latest
 
