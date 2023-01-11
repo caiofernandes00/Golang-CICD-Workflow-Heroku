@@ -22,15 +22,15 @@ func main() {
 	}
 
 	fmt.Println("Server is running on port " + port)
-	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		var req Request
 		err := json.NewDecoder(r.Body).Decode(&req)
 		if err != nil {
 			fmt.Println("Error: ", err)
+			json.NewEncoder(w).Encode("error")
 		}
 
-		res := Response{Message: "Hello " + req.Name}
-		json.NewEncoder(w).Encode(res)
+		json.NewEncoder(w).Encode("ok")
 	})
 
 	err := http.ListenAndServe(":"+port, nil)

@@ -30,7 +30,10 @@ jobs:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
         heroku_app_name: "golang-cicd-workflow"
         heroku_email: "caiow.wk@gmail.com"
-        image_name: heroku/api:${{github.sha}}
+        healthcheck: "https://golang-cicd-workflow.herokuapp.com/health"
+        checkstring: "ok"
+        delay: 5
+        rollbackonhealthcheckfailed: true
         usedocker: true
         docker_build_args: |
           NODE_ENV
