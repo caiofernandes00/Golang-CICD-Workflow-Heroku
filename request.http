@@ -1,1 +1,3 @@
 curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080
+
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://pure-wildwood-61251.herokuapp.com
