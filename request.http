@@ -1,2 +1,5 @@
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://pure-wildwood-61251.herokuapp.com
+###POST /test (local)
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080/test
+
+###POST /test (heroku)
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://floating-lowlands-89617.herokuapp.com/test
