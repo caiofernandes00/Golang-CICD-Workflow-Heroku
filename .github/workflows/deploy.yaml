@@ -25,9 +25,14 @@ jobs:
         tags: heroku/api:${{github.sha}}
         
     - name: Deploy to Heroku
-      uses: appleboy/heroku-action@v3
+      uses: akhileshns/heroku-deploy@v3.12.12
       with:
         heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
-        app_name: golang-cicd-workflow
+        heroku_app_name: "golang-cicd-workflow"
+        heroku_email: "caiow.wk@gmail.com"
         image_name: heroku/api:${{github.sha}}
-
+        usedocker: true
+        docker_build_args: |
+          NODE_ENV
+      env:
+        NODE_ENV: production
