@@ -18,7 +18,7 @@ type Response struct {
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = ":8080"
+		port = "8080"
 	}
 
 	fmt.Println("Server is running on port " + port)
@@ -29,7 +29,7 @@ func main() {
 		json.NewEncoder(w).Encode(res)
 	})
 
-	err := http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(":"+port, nil)
 	if err != nil {
 		fmt.Println("Error: ", err)
 	}
