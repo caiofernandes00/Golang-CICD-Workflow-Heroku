@@ -9,11 +9,11 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-    - name: Test
-      uses: ./.github/workflows/test.yaml
-
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Test
+      uses: ./.github/workflows/test.yaml
 
     - name: Setup Go environment
       uses: actions/setup-go@v2
