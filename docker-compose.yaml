@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: Golang-CICD-Workflow-Heroku-app
+    ports:
+      - '8080:8080'
+    networks:
+      - Golang-CICD-Workflow-Heroku-network
+    environment:
+      - PORT=8080
+      - DB_SOURCE=postgresql://postgres:postgres@Golang-CICD-Workflow-Heroku-db:5432/simple_database?sslmode=disable
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:14.3-alpine
+    container_name: Golang-CICD-Workflow-Heroku-postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USERNAME=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=simple_database
+    networks:
+      - Golang-CICD-Workflow-Heroku-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  Golang-CICD-Workflow-Heroku-network:
+    driver: bridge

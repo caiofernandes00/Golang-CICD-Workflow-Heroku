@@ -9,7 +9,6 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Test
-        uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/test.yaml
+    with:
+      go-version: 1.19
