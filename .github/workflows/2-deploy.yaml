@@ -31,7 +31,7 @@ jobs:
         heroku_app_name: "golang-cicd-workflow"
         heroku_email: "caiow.wk@gmail.com"
         healthcheck: "https://golang-cicd-workflow.herokuapp.com/health"
-        checkstring: "ok"
+        # checkstring: "ok"
         delay: 5
         rollbackonhealthcheckfailed: true
         usedocker: true
