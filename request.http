@@ -2,4 +2,4 @@
 curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080/test
 
 ###POST /test (heroku)
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://floating-lowlands-89617.herokuapp.com/test
+curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://golang-cicd-workflow.herokuapp.com/test
