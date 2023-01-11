@@ -1,1 +1,1 @@
-web: make && make go_run
+web: make docker_up
