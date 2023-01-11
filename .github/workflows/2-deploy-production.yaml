@@ -6,14 +6,12 @@ on:
       - main
 
 jobs:
-  test:
-    name: Test
-    uses: ./.github/workflows/test.yaml
-
   deploy:
     runs-on: ubuntu-latest
-
     steps:
+    - name: Test
+      uses: ./.github/workflows/test.yaml
+
     - name: Checkout code
       uses: actions/checkout@v2
 

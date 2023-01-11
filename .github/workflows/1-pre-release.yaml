@@ -8,7 +8,8 @@ on:
       - hotfix**
 
 jobs:
-  # Reuse test workflow
   test:
-    name: Test
-    uses: ./.github/workflows/test.yaml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        uses: ./.github/workflows/test.yaml
