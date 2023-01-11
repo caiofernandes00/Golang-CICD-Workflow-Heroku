@@ -15,9 +15,12 @@ type Response struct {
 	Message string `json:"message"`
 }
 
-var port = os.Getenv("PORT")
-
 func main() {
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = ":8080"
+	}
+
 	fmt.Println("Server is running on port " + port)
 	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
 		var req Request
