@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"net/http"
+	"os"
 )
 
 type Request struct {
@@ -12,6 +13,8 @@ type Request struct {
 type Response struct {
 	Message string `json:"message"`
 }
+
+var port = os.Getenv("PORT")
 
 func main() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -24,5 +27,5 @@ func main() {
 		json.NewEncoder(w).Encode(res)
 	})
 
-	http.ListenAndServe(":8080", nil)
+	http.ListenAndServe(port, nil)
 }
