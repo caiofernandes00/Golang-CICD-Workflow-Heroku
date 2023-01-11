@@ -29,5 +29,8 @@ func main() {
 		json.NewEncoder(w).Encode(res)
 	})
 
-	http.ListenAndServe(port, nil)
+	err := http.ListenAndServe(port, nil)
+	if err != nil {
+		fmt.Println("Error: ", err)
+	}
 }
