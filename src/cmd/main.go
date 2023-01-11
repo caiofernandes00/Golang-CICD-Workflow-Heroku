@@ -4,13 +4,14 @@ import (
 	"encoding/json"
 	"fmt"
 	"golang-cicd-workflow-heroku/src/util"
+	"log"
 	"net/http"
 )
 
 func loadEnv() util.Config {
 	config, err := util.LoadConfig(".")
 	if err != nil {
-		panic("Error loading config: " + err.Error())
+		log.Fatal("Error loading config: " + err.Error())
 	}
 
 	return config
@@ -18,6 +19,7 @@ func loadEnv() util.Config {
 
 func main() {
 	config := loadEnv()
+	// db.Connect(config)
 
 	fmt.Println("Server is running on port " + config.Port)
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -26,6 +28,6 @@ func main() {
 
 	err := http.ListenAndServe(":"+config.Port, nil)
 	if err != nil {
-		panic("Error starting server: " + err.Error())
+		log.Fatal("Error starting server: " + err.Error())
 	}
 }
