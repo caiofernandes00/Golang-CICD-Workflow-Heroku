@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 )
@@ -17,12 +18,10 @@ type Response struct {
 var port = os.Getenv("PORT")
 
 func main() {
+	fmt.Println("Server is running on port " + port)
 	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
 		var req Request
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
+		json.NewDecoder(r.Body).Decode(&req)
 		res := Response{Message: "Hello " + req.Name}
 		json.NewEncoder(w).Encode(res)
 	})
