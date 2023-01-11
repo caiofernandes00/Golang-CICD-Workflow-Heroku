@@ -24,7 +24,11 @@ func main() {
 	fmt.Println("Server is running on port " + port)
 	http.HandleFunc("/test", func(w http.ResponseWriter, r *http.Request) {
 		var req Request
-		json.NewDecoder(r.Body).Decode(&req)
+		err := json.NewDecoder(r.Body).Decode(&req)
+		if err != nil {
+			fmt.Println("Error: ", err)
+		}
+
 		res := Response{Message: "Hello " + req.Name}
 		json.NewEncoder(w).Encode(res)
 	})

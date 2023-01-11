@@ -1,0 +1,33 @@
+name: Deploy to Heroku
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Go environment
+      uses: actions/setup-go@v2
+      with:
+        go-version: 1.16
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        tags: heroku/api:${{github.sha}}
+        
+    - name: Deploy to Heroku
+      uses: appleboy/heroku-action@v3
+      with:
+        heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+        app_name: golang-cicd-workflow
+        image_name: heroku/api:${{github.sha}}
+
