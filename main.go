@@ -7,14 +7,6 @@ import (
 	"os"
 )
 
-type Request struct {
-	Name string `json:"name"`
-}
-
-type Response struct {
-	Message string `json:"message"`
-}
-
 func main() {
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -23,13 +15,6 @@ func main() {
 
 	fmt.Println("Server is running on port " + port)
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		var req Request
-		err := json.NewDecoder(r.Body).Decode(&req)
-		if err != nil {
-			fmt.Println("Error: ", err)
-			json.NewEncoder(w).Encode("error")
-		}
-
 		json.NewEncoder(w).Encode("ok")
 	})
 
