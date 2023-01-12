@@ -16,7 +16,7 @@ func Test(t *testing.T) {
 
 	defer server.Close()
 
-	req, err := http.NewRequest("GET", server.URL, nil)
+	req, err := http.NewRequest("GET", server.URL+"/health", nil)
 	if err != nil {
 		t.Fatal(err)
 	}
