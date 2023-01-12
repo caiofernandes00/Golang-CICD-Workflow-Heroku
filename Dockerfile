@@ -8,6 +8,6 @@ COPY app.env .
 COPY Makefile .
 COPY src/ src/
 
-RUN go build -o main ./src/cmd
+RUN go build -o server ./src/cmd/server.go
 
-CMD ["./main"]
+CMD ["./server"]
