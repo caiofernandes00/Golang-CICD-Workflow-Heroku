@@ -16,10 +16,6 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-      prometheus:
-        condition: service_started
-      alertmanager:
-        condition: service_started
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s
@@ -58,8 +54,11 @@ services:
       - --web.enable-lifecycle
       - --config.file=/etc/prometheus/prometheus.yml
     depends_on:
-      - alertmanager
-
+      alertmanager:
+        condition: service_started
+      grafana:
+        condition: service_started
+    
   alertmanager:
     image: prom/alertmanager
     container_name: Golang-CICD-Workflow-Heroku-alertmanager
@@ -68,7 +67,22 @@ services:
     networks:
       - Golang-CICD-Workflow-Heroku-network
     volumes:
-    - "./.docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - "./.docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - alertmanager-data:/data
+    command: 
+      - --log.level=debug
+      - --config.file=/etc/alertmanager/alertmanager.yml
+
+  grafana:
+    image: grafana/grafana:7.5.7
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - grafana-data:/var/lib/grafana
+    networks:
+      - Golang-CICD-Workflow-Heroku-network
 
 networks:
   Golang-CICD-Workflow-Heroku-network:
@@ -76,3 +90,5 @@ networks:
 
 volumes:
   prometheus-data:
+  alertmanager-data:
+  grafana-data:
