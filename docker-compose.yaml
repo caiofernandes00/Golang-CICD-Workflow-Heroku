@@ -92,3 +92,8 @@ volumes:
   prometheus-data:
   alertmanager-data:
   grafana-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ./.docker/grafana/dashboards
+      o: bind

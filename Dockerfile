@@ -8,6 +8,8 @@ COPY app.env .
 COPY Makefile .
 COPY src/ src/
 
+RUN apk add --no-cache make
+
 RUN go build -o server ./src/cmd/server.go
 
 CMD ["./server"]

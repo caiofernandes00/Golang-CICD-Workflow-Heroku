@@ -7,7 +7,6 @@ import (
 	"golang-cicd-workflow-heroku/src/util"
 	"log"
 	"os"
-	"path/filepath"
 
 	"github.com/labstack/echo/v4"
 )
@@ -42,7 +41,6 @@ func getRootFile() string {
 	if err != nil {
 		panic(err)
 	}
-	exPath := filepath.Dir(ex)
-	rootFile := filepath.Join(exPath, "../")
-	return rootFile
+
+	return ex
 }
