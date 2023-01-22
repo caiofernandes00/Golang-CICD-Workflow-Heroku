@@ -4,6 +4,8 @@ curl -X GET http://localhost:8080/health
 curl -X GET http://localhost:8080/bad_request_error
 ### GET /internal_error (local)
 curl -X GET http://localhost:8080/internal_error
+### GET /users (local)
+curl -X GET http://localhost:8080/users
 ### GET /metrics (local)
 curl -X GET http://localhost:8080/metrics
 
@@ -13,5 +15,7 @@ curl -X GET https://golang-cicd-workflow.herokuapp.com/health
 curl -X GET https://golang-cicd-workflow.herokuapp.com/bad_request_error
 ### GET /internal_error (heroku)
 curl -X GET https://golang-cicd-workflow.herokuapp.com/internal_error
+### GET /users (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/users
 ### GET /metrics (heroku)
 curl -X GET https://golang-cicd-workflow.herokuapp.com/metrics
