@@ -35,8 +35,8 @@ func loadEnv() util.Config {
 }
 
 func getRootFile() string {
-	ex, err := os.Getwd()
-	_, err = os.Stat(filepath.Join(ex, "app.env"))
+	ex, _ := os.Getwd()
+	_, err := os.Stat(filepath.Join(ex, "app.env"))
 	if err != nil {
 		ex = filepath.Join(ex, "../../")
 		_, err = os.Stat(filepath.Join(ex, "app.env"))
