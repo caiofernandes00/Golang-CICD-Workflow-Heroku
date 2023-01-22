@@ -7,6 +7,7 @@ import (
 	"golang-cicd-workflow-heroku/src/util"
 	"log"
 	"os"
+	"path/filepath"
 
 	"github.com/labstack/echo/v4"
 )
@@ -27,10 +28,7 @@ func main() {
 }
 
 func loadEnv() util.Config {
-	config, err := util.LoadConfig(getRootFile())
-	if err != nil {
-		log.Fatal("Error loading config: " + err.Error())
-	}
+	config, _ := util.LoadConfig(getRootFile())
 
 	fmt.Println("Server is running on port " + config.Port)
 	return config
@@ -38,8 +36,14 @@ func loadEnv() util.Config {
 
 func getRootFile() string {
 	ex, err := os.Getwd()
+	_, err = os.Stat(filepath.Join(ex, "app.env"))
 	if err != nil {
-		panic(err)
+		ex = filepath.Join(ex, "../../")
+		_, err = os.Stat(filepath.Join(ex, "app.env"))
+		if err != nil {
+			log.Fatal("Error loading config: " + err.Error())
+			panic(err)
+		}
 	}
 
 	return ex

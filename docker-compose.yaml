@@ -6,6 +6,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: Golang-CICD-Workflow-Heroku-app
+    volumes:
+      - ./src:/app/src
     ports:
       - '8080:8080'
     networks:
