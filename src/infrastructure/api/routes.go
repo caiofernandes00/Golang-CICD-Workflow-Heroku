@@ -6,6 +6,8 @@ import (
 )
 
 func RegisterRoutes(e *echo.Echo) {
-	e.GET("/health", HealthCheckHandler)
+	e.GET("/health", HealthCheckRouteHandler)
+	e.GET("/bad_request_error", BadRequestErrorRouteHandler)
+	e.GET("/internal_error", InternalErrorRouteHandler)
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 }
