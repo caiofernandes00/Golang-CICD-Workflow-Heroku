@@ -12,15 +12,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-var e *echo.Echo
-var config util.Config
+var (
+	e      *echo.Echo
+	config util.Config
+)
 
 func init() {
 	e = echo.New()
 	config = loadEnv()
-	metrics.RegisterMetrics()
-	api.RegisterMiddleware(e)
-	api.RegisterRoutes(e)
+	metrics.MetricsRegister()
+	api.MiddlewareRegister(e)
+	api.RoutesRegister(e)
 }
 
 func main() {
