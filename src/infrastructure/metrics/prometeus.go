@@ -30,10 +30,10 @@ var httpRequestDurationSummary = prometheus.NewSummaryVec(prometheus.SummaryOpts
 	Objectives:  map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
 }, []string{"route", "method", "status_code"})
 
-var httpRequestCache = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+var httpRequestDurationGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 	Namespace:   "echo_framework",
 	Subsystem:   "rest_api",
-	Name:        "http_requests_cache",
+	Name:        "http_request_duration_seconds_gauge",
 	Help:        "The current number of items in the cache",
 	ConstLabels: map[string]string{"version": "1.0.0"},
 }, []string{"route", "method", "status_code"})
@@ -42,5 +42,5 @@ func MetricsRegister() {
 	prometheus.MustRegister(httpRequestCounter)
 	prometheus.MustRegister(httpRequestDurationHist)
 	prometheus.MustRegister(httpRequestDurationSummary)
-	prometheus.MustRegister(httpRequestCache)
+	prometheus.MustRegister(httpRequestDurationGauge)
 }

@@ -25,7 +25,7 @@ func PrometheusMiddleware(next echo.HandlerFunc) echo.HandlerFunc {
 		httpRequestCounter.WithLabelValues(route, method, fmt.Sprint(statusCode)).Inc()
 		httpRequestDurationHist.WithLabelValues(route, method, fmt.Sprint(statusCode)).Observe(time.Since(start).Seconds())
 		httpRequestDurationSummary.WithLabelValues(route, method, fmt.Sprint(statusCode)).Observe(time.Since(start).Seconds())
-		httpRequestCache.WithLabelValues(route, method, fmt.Sprint(statusCode)).SetToCurrentTime()
+		httpRequestDurationGauge.WithLabelValues(route, method, fmt.Sprint(statusCode)).Set(time.Since(start).Seconds())
 		return nil
 	}
 }
