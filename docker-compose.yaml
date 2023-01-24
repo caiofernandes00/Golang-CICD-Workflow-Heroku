@@ -9,11 +9,11 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - '8080:8080'
+      - ${PORT}:${PORT}
     networks:
       - Golang-CICD-Workflow-Heroku-network
     environment:
-      - PORT=8080
+      - PORT=8443
       - DB_SOURCE=postgresql://postgres:postgres@Golang-CICD-Workflow-Heroku-db:5432/simple_database?sslmode=disable
     depends_on:
       postgres:
@@ -47,8 +47,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./.docker/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
+      - ./ci/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./ci/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
       - prometheus-data:/prometheus
     networks:
       - Golang-CICD-Workflow-Heroku-network
@@ -69,7 +69,7 @@ services:
     networks:
       - Golang-CICD-Workflow-Heroku-network
     volumes:
-      - "./.docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - "./ci/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
       - alertmanager-data:/data
     command: 
       - --log.level=debug
@@ -81,7 +81,7 @@ services:
       - 3000:3000
     restart: unless-stopped
     volumes:
-      - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./ci/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - grafana-data:/var/lib/grafana
     networks:
       - Golang-CICD-Workflow-Heroku-network
@@ -97,5 +97,5 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ./.docker/grafana/dashboards
+      device: ./ci/grafana/dashboards
       o: bind
