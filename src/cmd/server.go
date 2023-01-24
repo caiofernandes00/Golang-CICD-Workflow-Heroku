@@ -31,13 +31,20 @@ func init() {
 }
 
 func main() {
+	s := configTLS()
+	serverCertPath, serverKeyPath := certsPath()
+	if err := s.ListenAndServeTLS(serverCertPath, serverKeyPath); err != http.ErrServerClosed {
+		e.Logger.Fatal(err)
+	}
+}
 
+func configTLS() http.Server {
 	autoTLSManager := autocert.Manager{
 		Prompt:     autocert.AcceptTOS,
 		Cache:      autocert.DirCache("/var/www/.cache"),
 		HostPolicy: autocert.HostWhitelist(config.HostPolicy),
 	}
-	s := http.Server{
+	return http.Server{
 		Addr:    ":" + config.Port,
 		Handler: e,
 		TLSConfig: &tls.Config{
@@ -46,10 +53,20 @@ func main() {
 		},
 		ReadTimeout: 30 * time.Second,
 	}
+}
 
-	if err := s.ListenAndServeTLS("", ""); err != http.ErrServerClosed {
-		e.Logger.Fatal(err)
+func certsPath() (string, string) {
+	ex, _ := os.Getwd()
+	ex = filepath.Join(ex, "..", "certs")
+	_, err := os.Stat(filepath.Join(ex, "..", "certs"))
+	if err != nil {
+		log.Fatal("Error loading config: " + err.Error())
 	}
+
+	serverCertPath := filepath.Join(ex, "server-cert.pem")
+	serverKeyPath := filepath.Join(ex, "server-key.pem")
+
+	return serverCertPath, serverKeyPath
 }
 
 func loadEnv() util.Config {
