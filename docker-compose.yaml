@@ -9,11 +9,11 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - 8443:8443
+      - 8080:8080
     networks:
       - observability-series-golang-edition-network
     environment:
-      - PORT=8443
+      - PORT=8080
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s
