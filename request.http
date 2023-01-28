@@ -1,14 +1,14 @@
 #########################################################
 ### GET /health (local)
-curl -X GET http://localhost:8443/health
+curl -X GET https://localhost:8443/health
 ### GET /bad_request_error (local)
-curl -X GET http://localhost:8443/bad_request_error
+curl -X GET https://localhost:8443/bad_request_error
 ### GET /internal_error (local)
-curl -X GET http://localhost:8443/internal_error
+curl -X GET https://localhost:8443/internal_error
 ### GET /users (local)
-curl -X GET http://localhost:8443/users
+curl -X GET https://localhost:8443/users
 ### GET /metrics (local)
-curl -X GET http://localhost:8443/metrics
+curl -X GET https://localhost:8443/metrics
 #########################################################
 ### GET /health (heroku)
 curl -X GET https://golang-cicd-workflow.herokuapp.com/health

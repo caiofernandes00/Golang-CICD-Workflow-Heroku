@@ -9,7 +9,7 @@ services:
     volumes:
       - ./src:/app/src
     ports:
-      - ${PORT}:${PORT}
+      - 8443:8443
     networks:
       - Golang-CICD-Workflow-Heroku-network
     environment:
