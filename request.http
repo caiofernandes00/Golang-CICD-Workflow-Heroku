@@ -1,5 +1,22 @@
-###POST /health (local)
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST http://localhost:8080/health
-
-###POST /health (heroku)
-curl -d '{"name": "John"}' -H "Content-Type: application/json" -X POST https://golang-cicd-workflow.herokuapp.com/health
+#########################################################
+### GET /health (local)
+curl -X GET https://localhost:8443/health
+### GET /bad_request_error (local)
+curl -X GET https://localhost:8443/bad_request_error
+### GET /internal_error (local)
+curl -X GET https://localhost:8443/internal_error
+### GET /users (local)
+curl -X GET https://localhost:8443/users
+### GET /metrics (local)
+curl -X GET https://localhost:8443/metrics
+#########################################################
+### GET /health (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/health
+### GET /bad_request_error (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/bad_request_error
+### GET /internal_error (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/internal_error
+### GET /users (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/users
+### GET /metrics (heroku)
+curl -X GET https://golang-cicd-workflow.herokuapp.com/metrics

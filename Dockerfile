@@ -6,8 +6,11 @@ COPY go.mod .
 COPY go.sum .
 COPY app.env .
 COPY Makefile .
+COPY ci/certs/ certs
 COPY src/ src/
 
-RUN go build -o main ./src/cmd
+RUN apk add --no-cache make
 
-CMD ["./main"]
+RUN go build -o server ./src/cmd/server.go
+
+CMD ["./server"]

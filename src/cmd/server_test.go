@@ -7,16 +7,15 @@ import (
 	"testing"
 )
 
-func Test(t *testing.T) {
+func Test_Endpoint(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
-		w.Header().Set("Content-Type", "application/json")
 		fmt.Fprintln(w, `ok`)
 	}))
 
 	defer server.Close()
 
-	req, err := http.NewRequest("GET", server.URL, nil)
+	req, err := http.NewRequest("GET", server.URL+"/health", nil)
 	if err != nil {
 		t.Fatal(err)
 	}

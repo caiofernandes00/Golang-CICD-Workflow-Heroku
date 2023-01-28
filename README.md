@@ -1,2 +1,3 @@
-# Golang-CICD-Workflow-Heroku
-Just Trying to learn DevOps with a CI/CD using github actions and heroku
+# Observability-Series (golang edition)
+
+Trying to put together a series of

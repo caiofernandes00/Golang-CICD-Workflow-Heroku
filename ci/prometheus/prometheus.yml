@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 6s
+  scrape_timeout: 5s
+
+rule_files:
+  - 'alerting.rules.yml'
+
+scrape_configs:
+  - job_name: services
+    metrics_path: /metrics
+    static_configs:
+      - targets:
+          - 'observability-series-golang-edition-app:8080'
+          - 'prometheus:9090'
+          - 'idonotexists:564'
+
+alerting:
+  alertmanagers:
+  - scheme: http
+    static_configs:
+    - targets:
+      - "observability-series-golang-edition-alertmanager:9093"

@@ -5,35 +5,70 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: Golang-CICD-Workflow-Heroku-app
+    container_name: observability-series-golang-edition-app
+    volumes:
+      - ./src:/app/src
     ports:
-      - '8080:8080'
+      - 8443:8443
     networks:
-      - Golang-CICD-Workflow-Heroku-network
+      - observability-series-golang-edition-network
     environment:
-      - PORT=8080
-      - DB_SOURCE=postgresql://postgres:postgres@Golang-CICD-Workflow-Heroku-db:5432/simple_database?sslmode=disable
-    depends_on:
-      postgres:
-        condition: service_healthy
-
-  postgres:
-    image: postgres:14.3-alpine
-    container_name: Golang-CICD-Workflow-Heroku-postgres
-    ports:
-      - '5432:5432'
-    environment:
-      - POSTGRES_USERNAME=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=simple_database
-    networks:
-      - Golang-CICD-Workflow-Heroku-network
+      - PORT=8443
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
       interval: 10s
       timeout: 5s
       retries: 5
 
+  prometheus:
+    image: prom/prometheus
+    container_name: observability-series-golang-edition-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./ci/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./ci/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
+      - prometheus-data:/prometheus
+    networks:
+      - observability-series-golang-edition-network
+    command: 
+      - --web.enable-lifecycle
+      - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+      alertmanager:
+        condition: service_started
+      grafana:
+        condition: service_started
+    
+  alertmanager:
+    image: prom/alertmanager
+    container_name: observability-series-golang-edition-alertmanager
+    ports:
+    - "9093:9093"
+    networks:
+      - observability-series-golang-edition-network
+    volumes:
+      - "./ci/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - alertmanager-data:/data
+    command: 
+      - --log.level=debug
+      - --config.file=/etc/alertmanager/alertmanager.yml
+
+  grafana:
+    image: grafana/grafana:7.5.7
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+    volumes:
+      - ./ci/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./ci/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+    networks:
+      - observability-series-golang-edition-network
+
 networks:
-  Golang-CICD-Workflow-Heroku-network:
+  observability-series-golang-edition-network:
     driver: bridge
+
+volumes:
+  prometheus-data:
+  alertmanager-data:
