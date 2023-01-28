@@ -6,7 +6,6 @@ COPY go.mod .
 COPY go.sum .
 COPY app.env .
 COPY Makefile .
-COPY ci/certs/ certs
 COPY src/ src/
 
 RUN apk add --no-cache make
