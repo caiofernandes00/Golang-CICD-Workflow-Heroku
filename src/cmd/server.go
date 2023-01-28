@@ -1,20 +1,15 @@
 package main
 
 import (
-	"crypto/tls"
 	"fmt"
 	"log"
-	"net/http"
 	"observability-series-golang-edition/src/infrastructure/api"
 	"observability-series-golang-edition/src/infrastructure/metrics"
 	"observability-series-golang-edition/src/util"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/acme"
-	"golang.org/x/crypto/acme/autocert"
 )
 
 var (
@@ -31,42 +26,7 @@ func init() {
 }
 
 func main() {
-	s := configTLS()
-	serverCertPath, serverKeyPath := certsPath()
-	if err := s.ListenAndServeTLS(serverCertPath, serverKeyPath); err != http.ErrServerClosed {
-		e.Logger.Fatal(err)
-	}
-}
-
-func configTLS() http.Server {
-	autoTLSManager := autocert.Manager{
-		Prompt:     autocert.AcceptTOS,
-		Cache:      autocert.DirCache("/var/www/.cache"),
-		HostPolicy: autocert.HostWhitelist(config.HostPolicy),
-	}
-	return http.Server{
-		Addr:    ":" + config.Port,
-		Handler: e,
-		TLSConfig: &tls.Config{
-			GetCertificate: autoTLSManager.GetCertificate,
-			NextProtos:     []string{acme.ALPNProto},
-		},
-		ReadTimeout: 30 * time.Second,
-	}
-}
-
-func certsPath() (string, string) {
-	ex, _ := os.Getwd()
-	ex = filepath.Join(ex, "..", "certs")
-	_, err := os.Stat(filepath.Join(ex, "..", "certs"))
-	if err != nil {
-		log.Fatal("Error loading config: " + err.Error())
-	}
-
-	serverCertPath := filepath.Join(ex, "server-cert.pem")
-	serverKeyPath := filepath.Join(ex, "server-key.pem")
-
-	return serverCertPath, serverKeyPath
+	e.Logger.Fatal(e.Start(":" + config.Port))
 }
 
 func loadEnv() util.Config {
