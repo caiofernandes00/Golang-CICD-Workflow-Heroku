@@ -1,7 +1,7 @@
 package api
 
 import (
-	"golang-cicd-workflow-heroku/src/infrastructure/metrics"
+	"observability-series-golang-edition/src/infrastructure/metrics"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"

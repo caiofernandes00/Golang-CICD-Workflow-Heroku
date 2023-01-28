@@ -2,14 +2,14 @@ global:
   resolve_timeout: 5m
 
 route:
-  receiver: 'Golang-CICD-Workflow-Heroku-app'
+  receiver: 'observability-series-golang-edition-app'
   group_by: ['alertname']
   group_wait: 10s
   group_interval: 5m
   repeat_interval: 12h
 
 receivers:
-- name: 'Golang-CICD-Workflow-Heroku-app'
+- name: 'observability-series-golang-edition-app'
   webhook_configs:
   - url: 'http://alertmanager:9093/api/v1/alerts'
     send_resolved: true
