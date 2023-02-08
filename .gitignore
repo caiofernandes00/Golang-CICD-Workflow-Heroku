@@ -17,3 +17,6 @@ main
 
 # Docker
 .docker/data
+
+# Terraform
+*terraform*
