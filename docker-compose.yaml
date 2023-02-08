@@ -26,8 +26,8 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./ci/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - ./ci/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
+      - ./.docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./.docker/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
       - prometheus-data:/prometheus
     networks:
       - observability-series-golang-edition-network
@@ -48,7 +48,7 @@ services:
     networks:
       - observability-series-golang-edition-network
     volumes:
-      - "./ci/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
+      - "./.docker/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
       - alertmanager-data:/data
     command: 
       - --log.level=debug
@@ -60,8 +60,8 @@ services:
       - 3000:3000
     restart: unless-stopped
     volumes:
-      - ./ci/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./ci/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./.docker/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./.docker/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     networks:
       - observability-series-golang-edition-network
 
