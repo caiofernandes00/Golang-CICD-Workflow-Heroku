@@ -3,7 +3,9 @@ resource "aws_ecs_cluster" "golang_app" {
 }
 
 resource "aws_ecs_task_definition" "golang_app" {
-  family = aws_ecr_repository.my_app.name
+  family                   = aws_ecr_repository.my_app.name
+  network_mode             = "awsvpc"
+  requires_compatibilities = ["FARGATE"]
   container_definitions = jsonencode([
     {
       name      = aws_ecr_repository.my_app.name
@@ -33,6 +35,7 @@ resource "aws_ecs_service" "golang_app" {
   cluster         = aws_ecs_cluster.golang_app.id
   task_definition = aws_ecs_task_definition.golang_app.arn
   desired_count   = 2
+  launch_type     = "FARGATE"
   deployment_controller {
     type = "ECS"
   }
