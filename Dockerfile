@@ -6,11 +6,11 @@ COPY go.mod .
 COPY go.sum .
 COPY app.env .
 COPY Makefile .
-COPY src/ src/
+COPY app/ .
 
 RUN apk add --no-cache make
 
-RUN go build -o server ./src/cmd/server.go
+RUN go build -o server ./cmd/server.go
 
 ############################################
 FROM alpine:3.14
