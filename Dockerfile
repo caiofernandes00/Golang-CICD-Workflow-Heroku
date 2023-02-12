@@ -1,22 +1,19 @@
 FROM golang:1.20rc2-alpine3.17 AS builder
 
-WORKDIR /app
+WORKDIR /goapp
 
 COPY go.mod .
 COPY go.sum .
 COPY app.env .
-COPY Makefile .
-COPY app/ .
+COPY app/ ./app
 
-RUN apk add --no-cache make
-
-RUN go build -o server ./cmd/server.go
+RUN go build -o server ./app/cmd/server.go
 
 ############################################
 FROM alpine:3.14
 
 WORKDIR /app
-COPY --from=builder /app/server .
+COPY --from=builder /goapp/server .
 EXPOSE 8080
 
 CMD ["./server"]

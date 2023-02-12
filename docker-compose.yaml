@@ -4,10 +4,8 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-local
     container_name: observability-series-golang-edition-app
-    volumes:
-      - ./src:/app/src
     ports:
       - 8080:8080
     networks:

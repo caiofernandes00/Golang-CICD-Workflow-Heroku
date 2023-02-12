@@ -1,0 +1,14 @@
+FROM golang:1.20rc2-alpine3.17 AS builder
+
+WORKDIR /goapp
+
+COPY go.mod .
+COPY go.sum .
+COPY app.env .
+COPY Makefile .
+COPY app/ ./app
+
+RUN apk add --no-cache make
+
+EXPOSE 8080
+CMD go run ./app/cmd/server.go
