@@ -8,7 +8,7 @@ Trying to put together a simple application in Golang with a lot of features.
 <summary>Web Features</summary>
 
 - [x] Simple HTTP Server
-- [ ] HTTP/2
+- [x] HTTP/2
 - [ ] API Versioning
 - [ ] API Documentation
 - [ ] Middleware
