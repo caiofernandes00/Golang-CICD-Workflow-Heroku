@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"observability-series-golang-edition/src/infrastructure/api"
-	"observability-series-golang-edition/src/infrastructure/metrics"
-	"observability-series-golang-edition/src/util"
+	"observability-series-golang-edition/app/infrastructure/api"
+	"observability-series-golang-edition/app/infrastructure/metrics"
+	"observability-series-golang-edition/app/util"
 	"os"
 	"path/filepath"
 
