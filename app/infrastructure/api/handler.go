@@ -1,6 +1,7 @@
 package api
 
 import (
+	"errors"
 	"net/http"
 	"time"
 
@@ -17,6 +18,10 @@ func BadRequestErrorRouteHandler(e echo.Context) error {
 
 func InternalErrorRouteHandler(e echo.Context) error {
 	return e.String(http.StatusInternalServerError, "error")
+}
+
+func UnexpectedErrorRouteHandler(e echo.Context) error {
+	return errors.New("unexpected error")
 }
 
 func UsersRouteHandler(e echo.Context) error {

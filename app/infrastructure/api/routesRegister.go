@@ -9,6 +9,7 @@ func RoutesRegister(e *echo.Echo) {
 	e.GET("/health", HealthCheckRouteHandler)
 	e.GET("/bad_request_error", BadRequestErrorRouteHandler)
 	e.GET("/internal_error", InternalErrorRouteHandler)
+	e.GET("/unexpected_error", UnexpectedErrorRouteHandler)
 	e.GET("/users", UsersRouteHandler)
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 }

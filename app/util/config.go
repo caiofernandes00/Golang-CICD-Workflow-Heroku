@@ -1,6 +1,7 @@
 package util
 
 import (
+	"reflect"
 	"time"
 
 	"fmt"
@@ -9,13 +10,26 @@ import (
 )
 
 type Config struct {
-	Port                 string        `mapstructure:"PORT"`
-	MaxConcurrentStreams uint32        `mapstructure:"MAX_CONCURRENT_STREAMS"`
-	MaxReadFrameSize     uint32        `mapstructure:"MAX_READ_FRAME_SIZE"`
-	IdleTimeout          time.Duration `mapstructure:"IDLE_TIMEOUT"`
+	Port                    string        `mapstructure:"PORT"`
+	MaxConcurrentStreams    uint32        `mapstructure:"MAX_CONCURRENT_STREAMS"`
+	MaxReadFrameSize        uint32        `mapstructure:"MAX_READ_FRAME_SIZE"`
+	IdleTimeout             time.Duration `mapstructure:"IDLE_TIMEOUT"`
+	CircuitBreakerInterval  time.Duration `mapstructure:"CIRCUIT_BREAKER_INTERVAL"`
+	CircuitBreakerThreshold int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
 }
 
-func LoadEnvFile(path string) (config Config, err error) {
+func NewConfig() *Config {
+	return &Config{
+		Port:                    "8080",
+		MaxConcurrentStreams:    100,
+		MaxReadFrameSize:        100,
+		IdleTimeout:             10 * time.Second,
+		CircuitBreakerInterval:  10 * time.Second,
+		CircuitBreakerThreshold: 3,
+	}
+}
+
+func (c *Config) LoadEnvFile(path string) (err error) {
 	viper.AddConfigPath(path)
 	viper.SetConfigName("app")
 	viper.SetConfigType("env")
@@ -28,15 +42,30 @@ func LoadEnvFile(path string) (config Config, err error) {
 		return
 	}
 
-	err = viper.Unmarshal(&config)
+	err = viper.Unmarshal(&c)
+	c.unmarshalDurationFields()
 	fmt.Printf("Error unmarshalling config, %s", err)
+
 	return
 }
 
-func LoadEnv() (config Config, err error) {
+func (c *Config) LoadEnv() (config Config, err error) {
 	viper.AutomaticEnv()
 
 	err = viper.Unmarshal(&config)
 	fmt.Printf("Error unmarshalling config, %s", err)
 	return
+}
+
+func (c *Config) unmarshalDurationFields() {
+	t := reflect.TypeOf(*c)
+
+	for i := 0; i < t.NumField(); i++ {
+		fieldType := t.Field(i).Type
+
+		if fieldType == reflect.TypeOf(time.Duration(0)) {
+			value := viper.GetDuration(t.Field(i).Tag.Get("mapstructure"))
+			reflect.ValueOf(c).Elem().Field(i).Set(reflect.ValueOf(value * time.Second))
+		}
+	}
 }

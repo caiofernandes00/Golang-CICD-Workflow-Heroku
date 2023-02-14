@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"observability-series-golang-edition/app/infrastructure/api"
+	"observability-series-golang-edition/app/infrastructure/circuitbreaker"
 	"observability-series-golang-edition/app/infrastructure/metrics"
 	"observability-series-golang-edition/app/util"
 	"os"
@@ -17,14 +18,15 @@ import (
 var (
 	e           *echo.Echo
 	http2Server *http2.Server
-	config      util.Config
+	config      *util.Config
 )
 
 func init() {
 	e = echo.New()
-	config = loadEnv()
+	loadEnv()
+	cb := circuitbreaker.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
-	api.MiddlewareRegister(e)
+	api.MiddlewareRegister(e, cb)
 	api.RoutesRegister(e)
 	loadHttp2Server()
 }
@@ -45,14 +47,16 @@ func loadHttp2Server() {
 	}
 }
 
-func loadEnv() (config util.Config) {
+func loadEnv() {
+	config = util.NewConfig()
 	path, err := getRootFile()
 
 	if err == nil {
-		config, _ = util.LoadEnvFile(path)
+		config.LoadEnvFile(path)
+		return
 	}
 
-	util.LoadEnv()
+	config.LoadEnv()
 
 	return
 }

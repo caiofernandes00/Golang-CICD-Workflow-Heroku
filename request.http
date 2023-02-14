@@ -5,6 +5,8 @@ curl -X GET http://localhost:8080/health
 curl -X GET http://localhost:8080/bad_request_error
 ### GET /internal_error (local)
 curl -X GET http://localhost:8080/internal_error
+### GET /unexpected_error (local)
+curl -X GET http://localhost:8080/unexpected_error
 ### GET /users (local)
 curl -X GET http://localhost:8080/users
 ### GET /metrics (local)
