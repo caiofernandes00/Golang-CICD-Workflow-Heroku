@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"observability-series-golang-edition/app/infrastructure/api"
@@ -8,7 +9,9 @@ import (
 	"observability-series-golang-edition/app/infrastructure/metrics"
 	"observability-series-golang-edition/app/util"
 	"os"
+	"os/signal"
 	"path/filepath"
+	"syscall"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -32,11 +35,28 @@ func init() {
 }
 
 func main() {
-	if err := e.StartH2CServer(":"+config.Port, http2Server); err != http.ErrServerClosed {
-		log.Fatal(err)
-	}
+	go func() {
+		if err := e.StartH2CServer(":"+config.Port, http2Server); err != http.ErrServerClosed {
+			log.Fatal(err)
+		}
 
-	log.Println("Server is running on port " + config.Port)
+		log.Println("Server is running on port " + config.Port)
+	}()
+
+	gracefulShutdown()
+}
+
+func gracefulShutdown() {
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := e.Shutdown(ctx); err != nil {
+		e.Logger.Fatal(err)
+	}
 }
 
 func loadHttp2Server() {
