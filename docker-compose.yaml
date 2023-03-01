@@ -5,11 +5,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-local
-    container_name: observability-series-golang-edition-app
+    container_name: overengineering-my-application-app
     ports:
       - 8080:8080
     networks:
-      - observability-series-golang-edition-network
+      - overengineering-my-application-network
     environment:
       - PORT=8080
     healthcheck:
@@ -20,7 +20,7 @@ services:
 
   prometheus:
     image: prom/prometheus
-    container_name: observability-series-golang-edition-prometheus
+    container_name: overengineering-my-application-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -28,7 +28,7 @@ services:
       - ./metrics/prometheus/alerting.rules.yml:/etc/prometheus/alerting.rules.yml
       - prometheus-data:/prometheus
     networks:
-      - observability-series-golang-edition-network
+      - overengineering-my-application-network
     command: 
       - --web.enable-lifecycle
       - --config.file=/etc/prometheus/prometheus.yml
@@ -40,11 +40,11 @@ services:
     
   alertmanager:
     image: prom/alertmanager
-    container_name: observability-series-golang-edition-alertmanager
+    container_name: overengineering-my-application-alertmanager
     ports:
     - "9093:9093"
     networks:
-      - observability-series-golang-edition-network
+      - overengineering-my-application-network
     volumes:
       - "./metrics/alertmanager/alertmanager.yml:/etc/alertmanager/alertmanager.yml"
       - alertmanager-data:/data
@@ -61,10 +61,10 @@ services:
       - ./metrics/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./metrics/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     networks:
-      - observability-series-golang-edition-network
+      - overengineering-my-application-network
 
 networks:
-  observability-series-golang-edition-network:
+  overengineering-my-application-network:
     driver: bridge
 
 volumes:
