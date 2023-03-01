@@ -7,7 +7,7 @@ import (
 )
 
 func Test_SettingValue(t *testing.T) {
-	cache := NewLRUCache[int](5, 100)
+	cache := NewLRUCache[int](5)
 
 	cache.Set("key1", 1)
 	cache.Set("key2", 2)
@@ -32,7 +32,7 @@ func Test_SettingValue(t *testing.T) {
 }
 
 func Test_SettingValueAboveThreshold(t *testing.T) {
-	cache := NewLRUCache[int](5, 100)
+	cache := NewLRUCache[int](5)
 
 	cache.Set("key1", 1)
 	cache.Set("key2", 2)

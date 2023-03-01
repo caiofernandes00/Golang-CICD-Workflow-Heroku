@@ -26,5 +26,6 @@ func UnexpectedErrorRouteHandler(e echo.Context) error {
 
 func UsersRouteHandler(e echo.Context) error {
 	time.Sleep(5 * time.Second)
+	e.Response().Header().Set("Cache-Control", "public, max-age=60")
 	return e.JSON(http.StatusOK, map[string]string{"name": "John", "surname": "Doe"})
 }

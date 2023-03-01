@@ -7,21 +7,20 @@ import (
 type CacheElement[T any] struct {
 	node  *util.Node[string]
 	value T
+	ttl   int
 }
 
 type LRUCache[T any] struct {
 	dict       map[string]*CacheElement[T]
 	linkedList *util.DoublyLinkedList[string]
 	capacity   int
-	ttl        int
 }
 
-func NewLRUCache[T any](capacity int, ttl int) *LRUCache[T] {
+func NewLRUCache[T any](capacity int) *LRUCache[T] {
 	return &LRUCache[T]{
 		dict:       make(map[string]*CacheElement[T]),
 		linkedList: &util.DoublyLinkedList[string]{},
 		capacity:   capacity,
-		ttl:        ttl,
 	}
 }
 

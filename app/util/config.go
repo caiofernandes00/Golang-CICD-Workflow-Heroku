@@ -16,6 +16,7 @@ type Config struct {
 	IdleTimeout             time.Duration `mapstructure:"IDLE_TIMEOUT"`
 	CircuitBreakerInterval  time.Duration `mapstructure:"CIRCUIT_BREAKER_INTERVAL"`
 	CircuitBreakerThreshold int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
+	CacheRequestCapacity    int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
 }
 
 func NewConfig() *Config {
@@ -26,6 +27,7 @@ func NewConfig() *Config {
 		IdleTimeout:             10 * time.Second,
 		CircuitBreakerInterval:  10 * time.Second,
 		CircuitBreakerThreshold: 3,
+		CacheRequestCapacity:    5,
 	}
 }
 

@@ -29,7 +29,7 @@ func init() {
 	loadEnv()
 	cb := circuitbreaker.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
-	api.MiddlewareRegister(e, cb)
+	api.MiddlewareRegister(e, config, cb)
 	api.RoutesRegister(e)
 	loadHttp2Server()
 }
