@@ -17,6 +17,7 @@ type Config struct {
 	CircuitBreakerInterval  time.Duration `mapstructure:"CIRCUIT_BREAKER_INTERVAL"`
 	CircuitBreakerThreshold int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
 	CacheRequestCapacity    int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
+	CacheRequestTTL         time.Duration `mapstructure:"CACHE_REQUEST_TTL"`
 }
 
 func NewConfig() *Config {
@@ -28,6 +29,7 @@ func NewConfig() *Config {
 		CircuitBreakerInterval:  10 * time.Second,
 		CircuitBreakerThreshold: 3,
 		CacheRequestCapacity:    5,
+		CacheRequestTTL:         10 * time.Second,
 	}
 }
 

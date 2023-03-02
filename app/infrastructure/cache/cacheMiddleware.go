@@ -34,7 +34,7 @@ func CacheMiddleware(config *util.Config) echo.MiddlewareFunc {
 				return nil
 			} else {
 				log.Println("Cache set: " + cacheKey)
-				cache.Set(cacheKey, buf.String())
+				cache.Set(cacheKey, buf.String(), config.CacheRequestTTL)
 			}
 			return nil
 		}
