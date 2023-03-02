@@ -11,4 +11,4 @@ COPY app/ ./app
 RUN apk add --no-cache make
 
 EXPOSE 8080
-CMD go run ./app/cmd/server.go
+CMD go run ./app/cmd/main.go

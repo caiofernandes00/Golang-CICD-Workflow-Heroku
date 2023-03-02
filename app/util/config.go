@@ -22,16 +22,7 @@ type Config struct {
 }
 
 func NewConfig() *Config {
-	return &Config{
-		Port:                    "8080",
-		MaxConcurrentStreams:    100,
-		MaxReadFrameSize:        100,
-		IdleTimeout:             10 * time.Second,
-		CircuitBreakerInterval:  10 * time.Second,
-		CircuitBreakerThreshold: 3,
-		CacheRequestCapacity:    5,
-		CacheRequestTTL:         10 * time.Second,
-	}
+	return &Config{}
 }
 
 func (c *Config) LoadEnvFile(path string) (err error) {
