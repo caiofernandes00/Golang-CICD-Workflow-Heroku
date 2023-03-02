@@ -1,9 +1,9 @@
 ######################## Application commands ########################
 go_build:
-	go build -o server ./app/cmd/server.go
+	go build -o main ./app/cmd/main.go
 
 go_run: go_build
-	./server
+	./main
 
 ######################## Docker compose commands ########################
 docker_up:
