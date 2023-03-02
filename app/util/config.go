@@ -18,6 +18,7 @@ type Config struct {
 	CircuitBreakerThreshold int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
 	CacheRequestCapacity    int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
 	CacheRequestTTL         time.Duration `mapstructure:"CACHE_REQUEST_TTL"`
+	SkipCompressionUrls     []string      `mapstructure:"SKIP_COMPRESSION_URLS"`
 }
 
 func NewConfig() *Config {

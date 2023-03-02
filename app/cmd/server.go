@@ -15,6 +15,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/rs/zerolog"
 	"golang.org/x/net/http2"
 )
 
@@ -22,14 +23,16 @@ var (
 	e           *echo.Echo
 	http2Server *http2.Server
 	config      *util.Config
+	logger      zerolog.Logger
 )
 
 func init() {
 	e = echo.New()
+	logger = zerolog.New(os.Stdout)
 	loadEnv()
 	cb := circuitbreaker.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
-	api.MiddlewareRegister(e, config, cb)
+	api.MiddlewareRegister(e, config, cb, logger)
 	api.RoutesRegister(e)
 	loadHttp2Server()
 }
