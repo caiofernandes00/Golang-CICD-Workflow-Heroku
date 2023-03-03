@@ -55,14 +55,18 @@ func (cb *CircuitBreaker) decreaseFailures() {
 	ticker := time.NewTicker(cb.interval)
 	defer ticker.Stop()
 
-	for {
-		select {
-		case <-ticker.C:
+	for range ticker.C {
+		if cb.failures > 0 {
 			cb.failures--
+		}
 
-			if cb.failures < cb.threshold {
-				cb.state = HalfOpen
-			}
+		if cb.failures == 0 {
+			cb.state = Closed
+			break
+		}
+
+		if cb.failures < cb.threshold {
+			cb.state = HalfOpen
 		}
 	}
 }

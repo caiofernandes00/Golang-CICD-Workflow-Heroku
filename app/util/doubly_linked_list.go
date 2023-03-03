@@ -155,10 +155,7 @@ func (l *DoublyLinkedList[T]) Contains(value T) bool {
 }
 
 func (l *DoublyLinkedList[T]) IsEmpty() bool {
-	if l.tail == nil {
-		return true
-	}
-	return false
+	return l.tail == nil
 }
 
 func (l *DoublyLinkedList[T]) Len() int {

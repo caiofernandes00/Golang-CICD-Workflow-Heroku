@@ -8,6 +8,9 @@ app_run: app_build
 app_test:
 	go test -v ./app/...
 
+app_lint:
+	golangci-lint run ./app/...
+
 ######################## Docker ########################
 docker_up:
 	docker compose up --build --force-recreate

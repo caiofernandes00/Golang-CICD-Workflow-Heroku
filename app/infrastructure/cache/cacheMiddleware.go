@@ -17,7 +17,7 @@ func CacheMiddleware(config *util.Config) echo.MiddlewareFunc {
 			cacheKey := c.Request().URL.String()
 			if v, ok := cache.Get(cacheKey); ok {
 				log.Println("Cache hit: " + cacheKey)
-				c.Response().Write([]byte(v.(string)))
+				_, _ = c.Response().Write([]byte(v.(string)))
 				return nil
 			}
 

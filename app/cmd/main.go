@@ -84,13 +84,11 @@ func loadEnv() {
 	path, err := getRootFile()
 
 	if err == nil {
-		config.LoadEnvFile(path)
+		_ = config.LoadEnvFile(path)
 		return
 	}
 
-	config.LoadEnv()
-
-	return
+	_, _ = config.LoadEnv()
 }
 
 func getRootFile() (ex string, err error) {
