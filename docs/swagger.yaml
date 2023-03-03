@@ -1,4 +1,61 @@
+basePath: /api/v1
 info:
-  contact: {}
-paths: {}
+  contact:
+    email: caiow.wk@gmail.com
+    name: Caio Fernandes
+    url: https://github.com/caiofernandes00
+  description: Example Golang REST API
+  title: Overengineering My Application API
+  version: "1.0"
+paths:
+  /bad_request_error:
+    get:
+      consumes:
+      - application/json
+      description: Generate bad request error - 400 Bad Request
+      produces:
+      - application/json
+      responses: {}
+      summary: Generate bad request error
+      tags:
+      - errors
+  /internal_error:
+    get:
+      consumes:
+      - application/json
+      description: Generate handled internal error
+      produces:
+      - application/json
+      responses: {}
+      summary: Generate handled internal error
+      tags:
+      - errors
+  /unexpected_error:
+    get:
+      consumes:
+      - application/json
+      description: Generate unhandled error
+      produces:
+      - application/json
+      responses: {}
+      summary: Generate unhandled error
+      tags:
+      - errors
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Get all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get users
+      tags:
+      - users
 swagger: "2.0"
