@@ -1,13 +1,14 @@
-package circuitbreaker
+package middleware
 
 import (
 	"errors"
+	"overengineering-my-application/app/infrastructure/resilience"
 	"strconv"
 
 	"github.com/labstack/echo/v4"
 )
 
-func CircuitBreakerMiddleware(cb *CircuitBreaker) echo.MiddlewareFunc {
+func CircuitBreakerMiddleware(cb *resilience.CircuitBreaker) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 			err := cb.Call(func() error {

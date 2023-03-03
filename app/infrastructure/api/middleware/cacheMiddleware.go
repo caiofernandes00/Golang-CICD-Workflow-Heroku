@@ -1,16 +1,17 @@
-package cache
+package middleware
 
 import (
 	"bytes"
 	"log"
 	"net/http"
+	"overengineering-my-application/app/infrastructure/cache"
 	"overengineering-my-application/app/util"
 
 	"github.com/labstack/echo/v4"
 )
 
 func CacheMiddleware(config *util.Config) echo.MiddlewareFunc {
-	var cache = NewLRUCache[any](config.CacheRequestCapacity)
+	var cache = cache.NewLRUCache[any](config.CacheRequestCapacity)
 
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {

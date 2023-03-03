@@ -4,7 +4,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
-var httpRequestCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
+var HttpRequestCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Namespace:   "echo_framework",
 	Subsystem:   "rest_api",
 	Name:        "http_requests_count",
@@ -12,7 +12,7 @@ var httpRequestCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	ConstLabels: map[string]string{"version": "1.0.0"},
 }, []string{"route", "method", "status_code"})
 
-var httpRequestDurationHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
+var HttpRequestDurationHist = prometheus.NewHistogramVec(prometheus.HistogramOpts{
 	Namespace:   "echo_framework",
 	Subsystem:   "rest_api",
 	Name:        "http_request_duration_seconds_hist",
@@ -21,7 +21,7 @@ var httpRequestDurationHist = prometheus.NewHistogramVec(prometheus.HistogramOpt
 	Buckets:     prometheus.DefBuckets,
 }, []string{"route", "method", "status_code"})
 
-var httpRequestDurationSummary = prometheus.NewSummaryVec(prometheus.SummaryOpts{
+var HttpRequestDurationSummary = prometheus.NewSummaryVec(prometheus.SummaryOpts{
 	Namespace:   "echo_framework",
 	Subsystem:   "rest_api",
 	Name:        "http_request_duration_seconds_summary",
@@ -30,7 +30,7 @@ var httpRequestDurationSummary = prometheus.NewSummaryVec(prometheus.SummaryOpts
 	Objectives:  map[float64]float64{0.5: 0.05, 0.9: 0.01, 0.99: 0.001},
 }, []string{"route", "method", "status_code"})
 
-var httpRequestDurationGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
+var HttpRequestDurationGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 	Namespace:   "echo_framework",
 	Subsystem:   "rest_api",
 	Name:        "http_request_duration_seconds_gauge",
@@ -39,8 +39,8 @@ var httpRequestDurationGauge = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 }, []string{"route", "method", "status_code"})
 
 func MetricsRegister() {
-	prometheus.MustRegister(httpRequestCounter)
-	prometheus.MustRegister(httpRequestDurationHist)
-	prometheus.MustRegister(httpRequestDurationSummary)
-	prometheus.MustRegister(httpRequestDurationGauge)
+	prometheus.MustRegister(HttpRequestCounter)
+	prometheus.MustRegister(HttpRequestDurationHist)
+	prometheus.MustRegister(HttpRequestDurationSummary)
+	prometheus.MustRegister(HttpRequestDurationGauge)
 }

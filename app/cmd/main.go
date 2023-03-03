@@ -7,8 +7,9 @@ import (
 	"os"
 	"os/signal"
 	"overengineering-my-application/app/infrastructure/api"
-	"overengineering-my-application/app/infrastructure/circuitbreaker"
+	customMiddleware "overengineering-my-application/app/infrastructure/api/middleware"
 	"overengineering-my-application/app/infrastructure/metrics"
+	"overengineering-my-application/app/infrastructure/resilience"
 	"overengineering-my-application/app/util"
 	"path/filepath"
 	"strings"
@@ -32,9 +33,9 @@ var (
 func init() {
 	e = echo.New()
 	loadEnv()
-	cb := circuitbreaker.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
+	cb := resilience.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
-	api.MiddlewareRegister(e, config, cb, loggerSetup(), gzipSetup(config))
+	customMiddleware.MiddlewareRegister(e, config, cb, loggerSetup(), gzipSetup(config))
 	api.RoutesRegister(e)
 	loadHttp2Server()
 }
