@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
-	"overengineering-my-application/app/infrastructure/api"
-	customMiddleware "overengineering-my-application/app/infrastructure/api/middleware"
+	customMiddlewares "overengineering-my-application/app/infrastructure/api/middlewares"
+	"overengineering-my-application/app/infrastructure/api/routes"
 	"overengineering-my-application/app/infrastructure/metrics"
 	"overengineering-my-application/app/infrastructure/resilience"
 	"overengineering-my-application/app/util"
@@ -35,8 +35,8 @@ func init() {
 	loadEnv()
 	cb := resilience.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
-	customMiddleware.MiddlewareRegister(e, config, cb, loggerSetup(), gzipSetup(config))
-	api.RoutesRegister(e)
+	customMiddlewares.MiddlewareRegister(e, config, cb, loggerSetup(), gzipSetup(config))
+	routes.RoutesRegister(e)
 	loadHttp2Server()
 }
 

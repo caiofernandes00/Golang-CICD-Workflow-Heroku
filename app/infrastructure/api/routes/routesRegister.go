@@ -1,4 +1,4 @@
-package api
+package routes
 
 import (
 	"github.com/labstack/echo/v4"

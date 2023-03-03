@@ -19,6 +19,7 @@ type Config struct {
 	CacheRequestCapacity    int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
 	CacheRequestTTL         time.Duration `mapstructure:"CACHE_REQUEST_TTL"`
 	SkipCompressionUrls     []string      `mapstructure:"SKIP_COMPRESSION_URLS"`
+	RateLimiter             time.Duration `mapstructure:"RATE_LIMITER"`
 }
 
 func NewConfig() *Config {

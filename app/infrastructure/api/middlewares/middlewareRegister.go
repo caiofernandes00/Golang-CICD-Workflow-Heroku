@@ -1,4 +1,4 @@
-package middleware
+package middlewares
 
 import (
 	"overengineering-my-application/app/infrastructure/resilience"
@@ -10,10 +10,11 @@ import (
 
 func MiddlewareRegister(
 	e *echo.Echo, config *util.Config, cb *resilience.CircuitBreaker,
-	loggerSetup middleware.RequestLoggerConfig, gzipSetup middleware.GzipConfig) {
-
+	loggerSetup middleware.RequestLoggerConfig, gzipSetup middleware.GzipConfig,
+) {
 	e.Use(middleware.RequestLoggerWithConfig(loggerSetup))
 	e.Use(middleware.Recover())
+	e.Use(middleware.KeyAuth(RateLimiterMiddleware(config.RateLimiter)))
 	e.Use(middleware.GzipWithConfig(gzipSetup))
 	e.Use(CacheMiddleware(config))
 	e.Use(PrometheusMiddleware)

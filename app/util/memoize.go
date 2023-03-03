@@ -17,16 +17,8 @@ func Memoize(fn any) func(params ...any) any {
 		if v, ok := cache[key]; ok {
 			return v
 		}
-		result := reflect.ValueOf(fn).Call(grabAllParamsToValue(params))
+		result := reflect.ValueOf(fn).Call(GrabAllFunctionParamsToValue(params))
 		cache[key] = result[0].Interface()
 		return cache[key]
 	}
-}
-
-func grabAllParamsToValue(params []any) []reflect.Value {
-	var values []reflect.Value
-	for _, param := range params {
-		values = append(values, reflect.ValueOf(param))
-	}
-	return values
 }
