@@ -14,17 +14,19 @@ const (
 )
 
 type CircuitBreaker struct {
-	failures  int
-	interval  time.Duration
-	threshold int
-	state     State
+	failures                    int
+	interval                    time.Duration
+	threshold                   int
+	state                       State
+	runningDecreaseFailuresChan chan bool
 }
 
 func NewCircuitBreaker(interval time.Duration, threshold int) *CircuitBreaker {
 	return &CircuitBreaker{
-		interval:  interval,
-		threshold: threshold,
-		state:     Closed,
+		interval:                    interval,
+		threshold:                   threshold,
+		state:                       Closed,
+		runningDecreaseFailuresChan: make(chan bool),
 	}
 }
 
@@ -32,7 +34,9 @@ func (cb *CircuitBreaker) HandleError() {
 	cb.failures++
 	if cb.failures > cb.threshold {
 		cb.state = Open
-		go cb.decreaseFailures()
+		if !<-cb.runningDecreaseFailuresChan {
+			go cb.decreaseFailures()
+		}
 	}
 }
 
@@ -51,6 +55,10 @@ func (cb *CircuitBreaker) Call(fn func() error) error {
 	return err
 }
 
+func (cb *CircuitBreaker) State() State {
+	return cb.state
+}
+
 func (cb *CircuitBreaker) decreaseFailures() {
 	ticker := time.NewTicker(cb.interval)
 	defer ticker.Stop()
@@ -62,6 +70,7 @@ func (cb *CircuitBreaker) decreaseFailures() {
 
 		if cb.failures == 0 {
 			cb.state = Closed
+			cb.runningDecreaseFailuresChan <- false
 			break
 		}
 

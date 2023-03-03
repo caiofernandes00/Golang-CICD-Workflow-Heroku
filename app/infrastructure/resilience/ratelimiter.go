@@ -5,22 +5,27 @@ import (
 )
 
 type RateLimiter struct {
-	rateLimit   time.Duration
-	lastRequest time.Time
+	rateLimit      time.Duration
+	lastRequest    time.Time
+	circuitBreaker *CircuitBreaker
 }
 
-func NewRateLimiter(rateLimit time.Duration) *RateLimiter {
+func NewRateLimiter(rateLimit time.Duration, circuitBreaker *CircuitBreaker) *RateLimiter {
 	return &RateLimiter{
-		rateLimit: rateLimit,
+		rateLimit:      rateLimit,
+		circuitBreaker: circuitBreaker,
 	}
 }
 
-func (rl *RateLimiter) Allow() (bool, error) {
-	if time.Since(rl.lastRequest) < rl.rateLimit {
-		return false, ErrRateLimitExceeded
+func (rl *RateLimiter) Call(fn func() error) error {
+	if time.Since(rl.lastRequest)*time.Second < rl.rateLimit*time.Second {
+		return ErrRateLimitExceeded
+	}
+	if rl.circuitBreaker.State() == HalfOpen {
+		rl.rateLimit = rl.rateLimit * 2
 	}
 
 	rl.lastRequest = time.Now()
 
-	return true, nil
+	return fn()
 }

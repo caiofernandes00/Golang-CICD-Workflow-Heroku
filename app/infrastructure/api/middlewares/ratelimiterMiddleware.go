@@ -12,11 +12,10 @@ func RateLimiterMiddleware(rateLimiter time.Duration) middleware.KeyAuthValidato
 	rl := resilience.NewRateLimiter(rateLimiter)
 
 	return func(key string, c echo.Context) (bool, error) {
-		allowed, err := rl.Allow()
-		if err != nil {
-			return false, resilience.ErrRateLimitExceeded
-		}
+		err := rl.Call(func() error {
+			return nil
+		})
 
-		return allowed, nil
+		return err == nil, err
 	}
 }
