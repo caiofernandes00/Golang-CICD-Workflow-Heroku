@@ -2,6 +2,7 @@ package resilience
 
 import (
 	"errors"
+	"sync"
 	"time"
 )
 
@@ -14,29 +15,30 @@ const (
 )
 
 type CircuitBreaker struct {
-	failures                    int
-	interval                    time.Duration
-	threshold                   int
-	state                       State
-	runningDecreaseFailuresChan chan bool
+	failures  int
+	interval  time.Duration
+	threshold int
+	state     State
+
+	mu          sync.Mutex
+	isExecuting bool
 }
 
 func NewCircuitBreaker(interval time.Duration, threshold int) *CircuitBreaker {
 	return &CircuitBreaker{
-		interval:                    interval,
-		threshold:                   threshold,
-		state:                       Closed,
-		runningDecreaseFailuresChan: make(chan bool),
+		interval:    interval,
+		threshold:   threshold,
+		state:       Closed,
+		mu:          sync.Mutex{},
+		isExecuting: false,
 	}
 }
 
-func (cb *CircuitBreaker) HandleError() {
+func (cb *CircuitBreaker) handleError() {
 	cb.failures++
 	if cb.failures > cb.threshold {
 		cb.state = Open
-		if !<-cb.runningDecreaseFailuresChan {
-			go cb.decreaseFailures()
-		}
+		cb.Heal()
 	}
 }
 
@@ -47,9 +49,7 @@ func (cb *CircuitBreaker) Call(fn func() error) error {
 
 	err := fn()
 	if err != nil {
-		cb.HandleError()
-	} else if cb.state == HalfOpen {
-		cb.state = Closed
+		cb.handleError()
 	}
 
 	return err
@@ -59,9 +59,27 @@ func (cb *CircuitBreaker) State() State {
 	return cb.state
 }
 
+func (cb *CircuitBreaker) Failures() int {
+	return cb.failures
+}
+
+func (cb *CircuitBreaker) Heal() {
+	if !cb.IsHealing() {
+		cb.isExecuting = true
+		go cb.decreaseFailures()
+	}
+}
+
+func (cb *CircuitBreaker) IsHealing() bool {
+	return cb.isExecuting
+}
+
 func (cb *CircuitBreaker) decreaseFailures() {
 	ticker := time.NewTicker(cb.interval)
-	defer ticker.Stop()
+	finish := func() {
+		ticker.Stop()
+		cb.isExecuting = false
+	}
 
 	for range ticker.C {
 		if cb.failures > 0 {
@@ -70,7 +88,7 @@ func (cb *CircuitBreaker) decreaseFailures() {
 
 		if cb.failures == 0 {
 			cb.state = Closed
-			cb.runningDecreaseFailuresChan <- false
+			finish()
 			break
 		}
 
