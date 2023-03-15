@@ -9,7 +9,7 @@ import (
 	customMiddlewares "overengineering-my-application/app/infrastructure/api/middlewares"
 	"overengineering-my-application/app/infrastructure/api/routes"
 	"overengineering-my-application/app/infrastructure/metrics"
-	"overengineering-my-application/app/infrastructure/resilience"
+	"overengineering-my-application/app/infrastructure/resilience/observable/circuitbreaker"
 	"overengineering-my-application/app/util"
 	"path/filepath"
 	"strings"
@@ -33,7 +33,7 @@ var (
 func init() {
 	e = echo.New()
 	loadEnv()
-	cb := resilience.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
+	cb := circuitbreaker.NewCircuitBreaker(config.CircuitBreakerInterval, config.CircuitBreakerThreshold)
 	metrics.MetricsRegister()
 	customMiddlewares.MiddlewareRegister(e, config, cb, loggerSetup(), gzipSetup(config))
 	routes.RoutesRegister(e)

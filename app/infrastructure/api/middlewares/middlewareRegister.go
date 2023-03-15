@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"overengineering-my-application/app/infrastructure/resilience"
+	"overengineering-my-application/app/infrastructure/resilience/observable/circuitbreaker"
 	"overengineering-my-application/app/util"
 
 	"github.com/labstack/echo/v4"
@@ -9,7 +9,7 @@ import (
 )
 
 func MiddlewareRegister(
-	e *echo.Echo, config *util.Config, cb *resilience.CircuitBreaker,
+	e *echo.Echo, config *util.Config, cb *circuitbreaker.CircuitBreaker,
 	loggerSetup middleware.RequestLoggerConfig, gzipSetup middleware.GzipConfig,
 ) {
 	e.Use(middleware.RequestLoggerWithConfig(loggerSetup))

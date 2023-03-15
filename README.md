@@ -9,11 +9,11 @@ Trying to put together a simple application in Golang with a lot of features.
 
 - [x] Simple HTTP Server
 - [x] HTTP/2
-- [ ] API Versioning
-- [ ] API Documentation
-- [ ] Middleware
-- [ ] Logging
-- [ ] Compression
+- [x] API Versioning
+- [x] API Documentation
+- [x] Middleware
+- [x] Logging
+- [x] Compression
 - [ ] gRPC
 
 </details>
@@ -21,15 +21,15 @@ Trying to put together a simple application in Golang with a lot of features.
 <details>
 <summary>Resilience</summary>
 
-- [ ] Health Check
-- [ ] Graceful Shutdown
+- [x] Health Check
+- [x] Graceful Shutdown
 - [ ] Panic Recovery
-- [ ] Circuit Breaker
+- [x] Circuit Breaker
 - [ ] Retry
 - [ ] Timeout
 - [ ] ThreadPool Bulkhead
 - [ ] Semaphore Bulkhead
-- [ ] Rate Limiter
+- [x] Rate Limiter
 - [ ] TimeLimiter
 
 </details>
@@ -81,7 +81,7 @@ Trying to put together a simple application in Golang with a lot of features.
 <details>
 <summary>CI/CD</summary>
 
-- [ ] Github Actions
+- [x] Github Actions
 - [ ] TravisCI
 
 </details>

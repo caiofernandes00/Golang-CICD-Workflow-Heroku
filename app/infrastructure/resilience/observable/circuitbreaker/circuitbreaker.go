@@ -41,14 +41,6 @@ func NewCircuitBreaker(interval time.Duration, threshold int) *CircuitBreaker {
 	return cb
 }
 
-func (cb *CircuitBreaker) handleError() {
-	cb.failures++
-	if cb.failures > cb.threshold {
-		cb.state = Open
-		cb.Heal()
-	}
-}
-
 func (cb *CircuitBreaker) Call(fn func() error) error {
 	if cb.state == Open {
 		return errors.New("circuit breaker is open")
@@ -70,20 +62,28 @@ func (cb *CircuitBreaker) Failures() int {
 	return cb.failures
 }
 
-func (cb *CircuitBreaker) Heal() {
+func (cb *CircuitBreaker) IsHealing() bool {
+	return cb.isExecuting
+}
+
+func (cb *CircuitBreaker) heal() {
 	if !cb.IsHealing() {
 		cb.isExecuting = true
 		go cb.decreaseFailures()
 	}
 }
 
-func (cb *CircuitBreaker) IsHealing() bool {
-	return cb.isExecuting
+func (cb *CircuitBreaker) handleError() {
+	cb.failures++
+	if cb.failures > cb.threshold {
+		cb.changeStatus(Open)
+		cb.heal()
+	}
 }
 
-func (cb *CircuitBreaker) ChangeStatus(status State) {
+func (cb *CircuitBreaker) changeStatus(status State) {
 	cb.state = status
-	cb.Fire(status)
+	cb.Fire(ChangeState{From: cb.state, To: status})
 }
 
 func (cb *CircuitBreaker) decreaseFailures() {
@@ -99,13 +99,13 @@ func (cb *CircuitBreaker) decreaseFailures() {
 		}
 
 		if cb.failures == 0 {
-			cb.state = Closed
+			cb.changeStatus(Closed)
 			finish()
 			break
 		}
 
 		if cb.failures < cb.threshold {
-			cb.state = HalfOpen
+			cb.changeStatus(HalfOpen)
 		}
 	}
 }
