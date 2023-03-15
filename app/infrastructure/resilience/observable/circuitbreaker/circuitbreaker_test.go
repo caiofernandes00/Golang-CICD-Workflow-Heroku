@@ -1,12 +1,16 @@
-package resilience
+package circuitbreaker
 
 import (
 	"errors"
+	mock_resilience "overengineering-my-application/app/infrastructure/resilience/observable/circuitbreaker/mock"
 	"testing"
 	"time"
 
+	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/require"
 )
+
+// Core functionality
 
 func Test_CallAFuctionWithSuccess(t *testing.T) {
 	cb := NewCircuitBreaker(0, 0)
@@ -58,4 +62,19 @@ func execFuncCallWithErrorTimes(cb *CircuitBreaker, times int, msgError string) 
 		})
 	}
 	return err
+}
+
+// Observable
+func Test_Fire(t *testing.T) {
+	cb := NewCircuitBreaker(0, 0)
+	ctrl := gomock.NewController(t)
+	mockObserver := mock_resilience.NewMockObserver(ctrl)
+	mockObserver2 := mock_resilience.NewMockObserver(ctrl)
+	mockObserver.EXPECT().Notify("test").Times(1)
+	mockObserver2.EXPECT().Notify("test").Times(1)
+
+	cb.Subscribe(mockObserver)
+	cb.Subscribe(mockObserver2)
+
+	cb.Fire("test")
 }

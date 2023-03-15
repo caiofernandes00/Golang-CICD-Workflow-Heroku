@@ -1,12 +1,22 @@
 package util
 
-type Node[T comparable] struct {
+import "reflect"
+
+type Node[T any] struct {
 	Value T
 	prev  *Node[T]
 	next  *Node[T]
 }
 
-type DoublyLinkedList[T comparable] struct {
+func (n *Node[T]) Next() *Node[T] {
+	return n.next
+}
+
+func (n *Node[T]) Prev() *Node[T] {
+	return n.prev
+}
+
+type DoublyLinkedList[T any] struct {
 	head *Node[T]
 	tail *Node[T]
 	len  int
@@ -29,6 +39,23 @@ func (l *DoublyLinkedList[T]) AddToFront(value T) *Node[T] {
 	return newNode
 }
 
+func (l *DoublyLinkedList[T]) AddToBack(value T) *Node[T] {
+	newNode := &Node[T]{Value: value}
+
+	if l.tail == nil {
+		l.tail = newNode
+		l.head = newNode
+	} else {
+		l.tail.prev = newNode
+		newNode.next = l.tail
+		l.tail = newNode
+	}
+
+	l.len++
+
+	return newNode
+}
+
 func (l *DoublyLinkedList[T]) RemoveValue(value T) {
 	if l.IsEmpty() {
 		return
@@ -36,7 +63,7 @@ func (l *DoublyLinkedList[T]) RemoveValue(value T) {
 
 	node := l.head
 	for node != nil {
-		if node.Value == value {
+		if reflect.DeepEqual(node.Value, value) {
 			l.RemoveNode(node)
 			return
 		}
@@ -146,7 +173,7 @@ func (l *DoublyLinkedList[T]) Contains(value T) bool {
 
 	node := l.head
 	for node != nil {
-		if node.Value == value {
+		if reflect.DeepEqual(node.Value, value) {
 			return true
 		}
 		node = node.prev

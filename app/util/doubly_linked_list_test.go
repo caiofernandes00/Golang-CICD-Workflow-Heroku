@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func Test_Insert(t *testing.T) {
+func Test_AddToFront(t *testing.T) {
 	l := DoublyLinkedList[int]{}
 	l.AddToFront(1)
 	l.AddToFront(2)
@@ -25,6 +25,27 @@ func Test_Insert(t *testing.T) {
 	assert.Equal(t, 2, l.tail.next.Value)
 	assert.Equal(t, 3, l.tail.next.next.Value)
 	assert.Equal(t, 4, l.tail.next.next.next.Value)
+}
+
+func Test_AddToBack(t *testing.T) {
+	l := DoublyLinkedList[int]{}
+	l.AddToBack(1)
+	l.AddToBack(2)
+	l.AddToBack(3)
+	l.AddToBack(4)
+
+	assert.Equal(t, 4, l.len)
+
+	assert.Equal(t, 1, l.head.Value)
+	assert.Equal(t, 4, l.tail.Value)
+
+	assert.Equal(t, 2, l.head.prev.Value)
+	assert.Equal(t, 3, l.head.prev.prev.Value)
+	assert.Equal(t, 4, l.head.prev.prev.prev.Value)
+
+	assert.Equal(t, 3, l.tail.next.Value)
+	assert.Equal(t, 2, l.tail.next.next.Value)
+	assert.Equal(t, 1, l.tail.next.next.next.Value)
 }
 
 func Test_MoveToFront(t *testing.T) {

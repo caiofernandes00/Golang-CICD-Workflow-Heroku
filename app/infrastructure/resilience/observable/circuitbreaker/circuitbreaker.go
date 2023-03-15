@@ -1,7 +1,8 @@
-package resilience
+package circuitbreaker
 
 import (
 	"errors"
+	resilience "overengineering-my-application/app/infrastructure/resilience/observable"
 	"sync"
 	"time"
 )
@@ -15,6 +16,8 @@ const (
 )
 
 type CircuitBreaker struct {
+	resilience.Observable
+
 	failures  int
 	interval  time.Duration
 	threshold int
@@ -25,13 +28,17 @@ type CircuitBreaker struct {
 }
 
 func NewCircuitBreaker(interval time.Duration, threshold int) *CircuitBreaker {
-	return &CircuitBreaker{
+	cb := &CircuitBreaker{
 		interval:    interval,
 		threshold:   threshold,
 		state:       Closed,
 		mu:          sync.Mutex{},
 		isExecuting: false,
 	}
+
+	cb.Observable = *resilience.NewObservable()
+
+	return cb
 }
 
 func (cb *CircuitBreaker) handleError() {
@@ -72,6 +79,11 @@ func (cb *CircuitBreaker) Heal() {
 
 func (cb *CircuitBreaker) IsHealing() bool {
 	return cb.isExecuting
+}
+
+func (cb *CircuitBreaker) ChangeStatus(status State) {
+	cb.state = status
+	cb.Fire(status)
 }
 
 func (cb *CircuitBreaker) decreaseFailures() {

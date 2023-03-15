@@ -11,6 +11,15 @@ app_test:
 app_lint:
 	golangci-lint run ./app/...
 
+######################## Mocks ########################
+CIRCUIT_BREAKER_PATH = ./app/infrastructure/resilience/observable/circuitbreaker/observable.go
+CIRCUIT_BREAKER_PATH_MOCKGEN = ./app/infrastructure/resilience/observable/circuitbreaker/mock
+
+mockgen:
+	@for file in $(CIRCUIT_BREAKER_PATH); do \
+		mockgen -source=$$file -destination=$(CIRCUIT_BREAKER_PATH_MOCKGEN)/`basename $$file` ; \
+	done
+
 ######################## Docker ########################
 docker_up:
 	docker compose up --build --force-recreate
