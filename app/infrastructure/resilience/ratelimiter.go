@@ -16,7 +16,12 @@ func NewRateLimiter(rateLimit time.Duration) *RateLimiter {
 }
 
 func (rl *RateLimiter) Call(fn func() error) error {
-	if time.Since(rl.lastRequest)*time.Second < rl.rateLimit*time.Second {
+	if rl.lastRequest.IsZero() {
+		rl.lastRequest = time.Now()
+		return fn()
+	}
+	
+	if time.Since(rl.lastRequest)*time.Second < rl.rateLimit {
 		return ErrRateLimitExceeded
 	}
 
