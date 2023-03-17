@@ -23,11 +23,7 @@ func CircuitBreakerMiddleware(cb *circuitbreaker.CircuitBreaker) echo.Middleware
 				return nil
 			})
 
-			if err != nil {
-				return err
-			}
-
-			return nil
+			return err
 		}
 	}
 }

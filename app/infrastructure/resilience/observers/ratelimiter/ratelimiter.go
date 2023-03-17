@@ -9,15 +9,19 @@ import (
 )
 
 type RateLimiter struct {
-	rateLimit        time.Duration
-	dynamicRateLimit time.Duration
-	lastRequest      time.Time
+	baseRateLimit            time.Duration
+	dynamicRateLimit         time.Duration
+	lastRequest              time.Time
+	baseExponentialFactor    time.Duration
+	dynamicExponentialFactor time.Duration
 }
 
-func NewRateLimiter(rateLimit time.Duration) *RateLimiter {
+func NewRateLimiter(baseRateLimit time.Duration, baseExponentialFactor time.Duration) *RateLimiter {
 	return &RateLimiter{
-		rateLimit:        rateLimit,
-		dynamicRateLimit: rateLimit,
+		baseRateLimit:            baseRateLimit,
+		dynamicRateLimit:         baseRateLimit,
+		baseExponentialFactor:    baseExponentialFactor,
+		dynamicExponentialFactor: baseExponentialFactor,
 	}
 }
 
@@ -39,14 +43,19 @@ func (rl *RateLimiter) Call(fn func() error) error {
 func (rl *RateLimiter) Notify(data interface{}) {
 	if val, ok := data.(circuitbreaker.ChangeState); ok {
 		switch val.To {
-		case circuitbreaker.Open:
-			rl.dynamicRateLimit = rl.rateLimit * 2
 		case circuitbreaker.HalfOpen:
-			rl.dynamicRateLimit = rl.rateLimit * time.Duration(math.Floor(float64(rl.rateLimit)*1.5))
+			rl.dynamicRateLimit = rl.exponentialBackoff()
 		default:
-			rl.dynamicRateLimit = rl.rateLimit
+			rl.dynamicExponentialFactor = rl.baseExponentialFactor
+			rl.dynamicRateLimit = rl.baseRateLimit
 		}
 	} else {
 		log.Printf("unexpected data type: %T", data)
 	}
+}
+
+// TODO: Find a better way to calculate the dynamic rate limit
+func (rl *RateLimiter) exponentialBackoff() time.Duration {
+	rl.dynamicExponentialFactor++
+	return rl.dynamicRateLimit * time.Duration(math.Pow(float64(rl.baseExponentialFactor), 2))
 }

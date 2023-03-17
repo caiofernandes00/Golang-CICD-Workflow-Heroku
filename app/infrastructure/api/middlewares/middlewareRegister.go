@@ -14,7 +14,7 @@ func MiddlewareRegister(
 ) {
 	e.Use(middleware.RequestLoggerWithConfig(loggerSetup))
 	e.Use(middleware.Recover())
-	e.Use(middleware.KeyAuth(RateLimiterMiddleware(config.RateLimiter)))
+	e.Use(middleware.KeyAuth(RateLimiterMiddleware(config)))
 	e.Use(middleware.GzipWithConfig(gzipSetup))
 	e.Use(CacheMiddleware(config))
 	e.Use(PrometheusMiddleware)

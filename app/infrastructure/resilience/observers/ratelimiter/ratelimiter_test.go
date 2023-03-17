@@ -12,7 +12,7 @@ import (
 // Core functionality
 func Test_CallFunctionWithSuccess(t *testing.T) {
 	// Arrange
-	rl := NewRateLimiter(1 * time.Second)
+	rl := NewRateLimiter(1 * time.Second, 1 * time.Second)
 	// Act
 	err := callMultipleTimes(rl, 1)
 
@@ -23,7 +23,7 @@ func Test_CallFunctionWithSuccess(t *testing.T) {
 
 func Test_CallFunctionWithFailure(t *testing.T) {
 	// Arrange
-	rl := NewRateLimiter(1)
+	rl := NewRateLimiter(1 * time.Second, 1 * time.Second)
 	// Act
 	err := callMultipleTimes(rl, 2)
 	// Assert
@@ -43,12 +43,12 @@ func callMultipleTimes(rl *RateLimiter, n int) error {
 }
 
 // Observer functionality
-func Test_NotifyStateOpen(t *testing.T) {
+func Test_NotifyStateHalfOpen(t *testing.T) {
 	// Arrange
-	rl := NewRateLimiter(1)
-	changeState := circuitbreaker.ChangeState{From: circuitbreaker.Closed, To: circuitbreaker.Open}
+	rl := NewRateLimiter(1 * time.Second, 1 * time.Second)
+	changeState := circuitbreaker.ChangeState{From: circuitbreaker.Open, To: circuitbreaker.HalfOpen}
 	// Act
 	rl.Notify(changeState)
 	// Assert
-	require.Equal(t, time.Now().Round(time.Second*2), rl.dynamicRateLimit.Round(time.Second*2))
+	require.Equal(t, rl.baseRateLimit, rl.dynamicRateLimit)
 }

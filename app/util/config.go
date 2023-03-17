@@ -10,16 +10,17 @@ import (
 )
 
 type Config struct {
-	Port                    string        `mapstructure:"PORT"`
-	MaxConcurrentStreams    uint32        `mapstructure:"MAX_CONCURRENT_STREAMS"`
-	MaxReadFrameSize        uint32        `mapstructure:"MAX_READ_FRAME_SIZE"`
-	IdleTimeout             time.Duration `mapstructure:"IDLE_TIMEOUT"`
-	CircuitBreakerInterval  time.Duration `mapstructure:"CIRCUIT_BREAKER_INTERVAL"`
-	CircuitBreakerThreshold int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
-	CacheRequestCapacity    int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
-	CacheRequestTTL         time.Duration `mapstructure:"CACHE_REQUEST_TTL"`
-	SkipCompressionUrls     []string      `mapstructure:"SKIP_COMPRESSION_URLS"`
-	RateLimiter             time.Duration `mapstructure:"RATE_LIMITER"`
+	Port                             string        `mapstructure:"PORT"`
+	MaxConcurrentStreams             uint32        `mapstructure:"MAX_CONCURRENT_STREAMS"`
+	MaxReadFrameSize                 uint32        `mapstructure:"MAX_READ_FRAME_SIZE"`
+	IdleTimeout                      time.Duration `mapstructure:"IDLE_TIMEOUT"`
+	CircuitBreakerInterval           time.Duration `mapstructure:"CIRCUIT_BREAKER_INTERVAL"`
+	CircuitBreakerThreshold          int           `mapstructure:"CIRCUIT_BREAKER_THRESHOLD"`
+	CacheRequestCapacity             int           `mapstructure:"CACHE_REQUEST_CAPACITY"`
+	CacheRequestTTL                  time.Duration `mapstructure:"CACHE_REQUEST_TTL"`
+	SkipCompressionUrls              []string      `mapstructure:"SKIP_COMPRESSION_URLS"`
+	RateLimiter                      time.Duration `mapstructure:"RATE_LIMITER"`
+	RateLimiterExponentialBaseFactor time.Duration `mapstructure:"RATE_LIMITER_EXPONENTIAL_BASE_FACTOR"`
 }
 
 func NewConfig() *Config {
